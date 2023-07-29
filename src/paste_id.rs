@@ -1,4 +1,5 @@
 use rand::{self, Rng};
+use rocket::request::FromParam;
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 
@@ -26,5 +27,17 @@ impl PasteId<'_> {
     pub fn file_path(&self) -> PathBuf {
         let root = concat!(env!("CARGO_MANIFEST_DIR"), "/", "upload");
         Path::new(root).join(self.0.as_ref())
+    }
+}
+
+impl<'a> FromParam<'a> for PasteId<'a> {
+    type Error = &'a str;
+
+    fn from_param(param: &'a str) -> Result<Self, Self::Error> {
+        param
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric())
+            .then(|| PasteId(param.into()))
+            .ok_or(param)
     }
 }

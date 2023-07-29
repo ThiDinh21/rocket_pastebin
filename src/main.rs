@@ -29,8 +29,6 @@ fn index() -> &'static str {
 }
 
 #[get("/<id>")]
-async fn retrieve(id: &str) -> Option<File> {
-    let upload_dir = concat!(env!("CARGO_MANIFEST_DIR"), "/", "upload");
-    let filename = Path::new(upload_dir).join(id);
-    File::open(filename).await.ok()
+async fn retrieve(id: PasteId<'_>) -> Option<File> {
+    File::open(id.file_path()).await.ok()
 }
