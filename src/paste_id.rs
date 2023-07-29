@@ -3,6 +3,7 @@ use rocket::request::FromParam;
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 
+#[derive(UriDisplayPath)]
 pub struct PasteId<'a>(Cow<'a, str>);
 
 impl PasteId<'_> {
